@@ -33,42 +33,38 @@ public class StepApkDown implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        try {
-            File dst = new File(Environment.getExternalStorageDirectory(), "" + url.hashCode() + ".apk");
-            String serviceString = Context.DOWNLOAD_SERVICE;
-            DownloadManager downloadManager = (DownloadManager) context.getSystemService(serviceString);
+        File dst = new File(Environment.getExternalStorageDirectory(), "" + url.hashCode() + ".apk");
+        String serviceString = Context.DOWNLOAD_SERVICE;
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(serviceString);
 
-            Uri uri = Uri.parse(url);
-            DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setDestinationUri(Uri.fromFile(dst));
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setDestinationUri(Uri.fromFile(dst));
 
 //            request.setTitle("");
 // request.setDescription("");
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
 //request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
 //request.setMimeType("application/download.file");
 
-            long reference = downloadManager.enqueue(request);
+        long reference = downloadManager.enqueue(request);
 
-            for (; ; ) {
-                int[] st = getBytesAndStatus(downloadManager, reference);
-                Log.d("hiupgrate", Arrays.toString(st));
+        for (; ; ) {
+            int[] st = getBytesAndStatus(downloadManager, reference);
+            Log.d("hiupgrate", Arrays.toString(st));
 
-                Thread.sleep(500);
+            Thread.sleep(500);
 
-                if (st[2] == DownloadManager.STATUS_FAILED) {
-                    throw new Exception("down fail");
-                }
-
-                if (st[2] == DownloadManager.STATUS_SUCCESSFUL) {
-                    break;
-                }
+            if (st[2] == DownloadManager.STATUS_FAILED) {
+                throw new Exception("down fail");
             }
-            return dst.getAbsolutePath();
-        } catch (Exception e) {
-            throw e;
+
+            if (st[2] == DownloadManager.STATUS_SUCCESSFUL) {
+                break;
+            }
         }
+        return dst.getAbsolutePath();
     }
 
     public int[] getBytesAndStatus(DownloadManager downloadManager, long downloadId) {
