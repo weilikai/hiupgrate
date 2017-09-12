@@ -8,7 +8,7 @@ android:
   - extra-android-m2repository
 script:
 - ./gradlew build
-- cd ./lib/build
+- cd ./lib/build/outputs
 - git init
 - git config user.name "${U_NAME}"
 - git config user.email "${U_EMAIL}"
