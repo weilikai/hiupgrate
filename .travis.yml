@@ -8,5 +8,12 @@ android:
   - extra-android-m2repository
 script:
 - ./gradlew build
-after_deploy:
-- fir p lib/build/outputs/aar/lib-release.apk -T $FIR_TOKEN -c "`git cat-file tag $TRAVIS_TAG`"
+
+after_script:
+  - cd ./dist
+  - git init
+  - git config user.name "${U_NAME}"
+  - git config user.email "${U_EMAIL}"
+  - git add .
+  - git commit -m "Update tools"
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:${P_BRANCH}
