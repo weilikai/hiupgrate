@@ -10,7 +10,7 @@ script:
 - ./gradlew build
 
 after_script:
-  - cd ./dist
+  - cd ./lib/build
   - git init
   - git config user.name "${U_NAME}"
   - git config user.email "${U_EMAIL}"
